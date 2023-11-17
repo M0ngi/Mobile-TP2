@@ -1,6 +1,9 @@
-package com.example.tp2;
+package com.example.tp2
 
-public class Student(val firstname: String, val lastname: String, val sex: String) {
+class Student(val id: Number, val firstname: String, val lastname: String, val sex: String) {
+    var present = true
+
+
     override fun toString(): String {
         return "$firstname $lastname"
     }

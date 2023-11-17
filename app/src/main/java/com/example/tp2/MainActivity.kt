@@ -6,12 +6,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -34,38 +32,25 @@ class MainActivity : AppCompatActivity() {
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.hasFixedSize()
 
-        courStudentList = ArrayList<Student>()
-        courStudentList.add(Student("name1","cour","F"))
-        courStudentList.add(Student("name2","cour ","F"))
-        courStudentList.add(Student("name3","cour","M"))
-        courStudentList.add(Student("name4","cour","M"))
-        courStudentList.add(Student("name5","cour","F"))
-        courStudentList.add(Student("name6","cour","F"))
-        courStudentList.add(Student("name7","cour","F"))
+        courStudentList = StudentRepository.getCourStudents()
+        tpStudentList = StudentRepository.getTpStudents()
 
-        tpStudentList = ArrayList<Student>()
-        tpStudentList.add(Student("name1","tp","F"))
-        tpStudentList.add(Student("name6","tp","F"))
-        tpStudentList.add(Student("name2","tp ","F"))
-        tpStudentList.add(Student("name4","tp","M"))
-        tpStudentList.add(Student("name5","tp","F"))
-        tpStudentList.add(Student("name3","tp","M"))
-        tpStudentList.add(Student("name7","tp","F"))
-
-        var adapter = StudentAdapter(courStudentList)
+        val adapter = StudentAdapter(courStudentList)
         newRecyclerView.adapter = adapter
 
-        var autoCompAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,courStudentList)
+        val autoCompAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,courStudentList)
         autoComp.setAdapter(autoCompAdapter)
         autoComp.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                val userInput = s.toString().trim()
+                val currentAdapter = newRecyclerView.adapter as StudentAdapter
+                currentAdapter.filter.filter(userInput)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
             }
         })
 
@@ -75,11 +60,11 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(this@MainActivity,spinnerChoice,Toast.LENGTH_SHORT).show()
                 if (spinnerChoice=="Cours"){
-                    var adapterCours = StudentAdapter(courStudentList)
+                    val adapterCours = StudentAdapter(courStudentList)
                     newRecyclerView.adapter = adapterCours
                 }
                 else {
-                    var adapterTp = StudentAdapter(tpStudentList)
+                    val adapterTp = StudentAdapter(tpStudentList)
                     newRecyclerView.adapter = adapterTp
                 }
             }
